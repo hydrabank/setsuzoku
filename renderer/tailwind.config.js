@@ -29,7 +29,7 @@ module.exports = {
         },
     },
     fontFamily: {
-        "Inter": ["var(--font-inter)"],
+        "Inter": ["var(--font-inter)", "Inter"],
     }
   },
   plugins: [

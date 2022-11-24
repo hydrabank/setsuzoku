@@ -8,18 +8,21 @@ export default function Connected(props) {
     const [ status, setStatus ] = useState("connecting");
     const [ displayName, setDisplayName ] = useState(null);
     useEffect(() => {
-        if (props.host !== null) window.setsuzoku.listing.connect(props.host);
+        if (router.isReady) {
+            if (router?.query?.host !== null) window.setsuzoku.listing.connect(router?.query?.host);
+            else router.push("/");
 
-        window.onmessage = (event) => {
-            // event.source === window means the message is coming from the preload
-            // script, as opposed to from an <iframe> or other source.
-            if (event.source === window && event.data?.type === "connect") {
-                console.log(event.data)
-                if (displayName === null) setDisplayName(event.data.payload.displayName);
-                setStatus(event.data.payload.status);
+            window.onmessage = (event) => {
+                // event.source === window means the message is coming from the preload
+                // script, as opposed to from an <iframe> or other source.
+                if (event.source === window && event.data?.type === "connect") {
+                    console.log(event.data)
+                    if (displayName === null) setDisplayName(event.data.payload.displayName);
+                    setStatus(event.data.payload.status);
+                };
             };
         };
-    }, []);
+    }, [router.isReady]);
     return (
         <div className="flex flex-col space-y-4 w-full">
             {
@@ -55,7 +58,7 @@ export default function Connected(props) {
                         <div className="flex items-center justify-center w-full">
                             <IoSad className="text-6xl" />
                         </div>
-                        <h1 className="text-2xl font-bold font-Inter text-center">Failed to connect to <span className="lg:hidden">server</span> <code className="text-xl hidden lg:inline-block">{props.host}</code></h1>
+                        <h1 className="text-2xl font-bold font-Inter text-center">Failed to connect to <span className="lg:hidden">server</span> <code className="text-xl hidden lg:inline-block">{router?.query?.host}</code></h1>
                         <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
                             <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Reconnect</button>
                             <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push("/")}>Go home</button>
@@ -81,7 +84,7 @@ export default function Connected(props) {
     );
 };
 
-export function getServerSideProps(context) {
+export function UNUSED_getServerSideProps(context) {
     if (context.query.host) return {
         props: {
             host: context.query?.host || null

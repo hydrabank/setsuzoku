@@ -1,9 +1,9 @@
 {
-  "private": true,
+  "private": false,
   "name": "setsuzoku",
-  "description": "My application description",
+  "description": "A simplistic SSH host manager for Windows. Built with Next.js, Electron, and powered by OpenSSH.",
   "version": "0.1.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Dani <git@danny.works>",
   "main": "main/index.js",
   "scripts": {
     "clean": "rimraf dist renderer/.next renderer/out",
@@ -11,9 +11,7 @@
     "build": "next build renderer && next export renderer",
     "pack-app": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",
-    "dev:nextron": "nextron",
-    "build:nextron": "nextron build",
-    "postinstall:nextron": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@next/font": "^13.0.4",
