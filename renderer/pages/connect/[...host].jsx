@@ -1,0 +1,96 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from "react";
+import LoadingCircle from "/components/LoadingCircle";
+import { IoCheckmark, IoLockClosed, IoSad } from "react-icons/io5";
+
+export default function Connected(props) {
+    const router = useRouter();
+    const [ status, setStatus ] = useState("connecting");
+    const [ displayName, setDisplayName ] = useState(null);
+    useEffect(() => {
+        if (props.host !== null) window.setsuzoku.listing.connect(props.host);
+
+        window.onmessage = (event) => {
+            // event.source === window means the message is coming from the preload
+            // script, as opposed to from an <iframe> or other source.
+            if (event.source === window && event.data?.type === "connect") {
+                console.log(event.data)
+                if (displayName === null) setDisplayName(event.data.payload.displayName);
+                setStatus(event.data.payload.status);
+            };
+        };
+    }, []);
+    return (
+        <div className="flex flex-col space-y-4 w-full">
+            {
+                status === "connecting" && (
+                    <>
+                        <div>
+                            <LoadingCircle />
+                        </div>
+                        <h1 className="text-2xl font-bold font-Inter text-center">Connecting to server..</h1>
+                        <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push("/")}>Go home</button>
+                        </div>
+                    </>
+                )
+            }
+            {
+                status === "connected" && (
+                    <>
+                        <div className="flex items-center justify-center">
+                            <IoCheckmark className="text-6xl" />
+                        </div>
+                        <h1 className="text-2xl font-bold font-Inter text-center">Connected to {displayName ? displayName : "server"}</h1>
+                        <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Duplicate session</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push("/")}>Go home</button>
+                        </div>
+                    </>
+                )
+            }
+            {
+                status === "failed" && (
+                    <>
+                        <div className="flex items-center justify-center w-full">
+                            <IoSad className="text-6xl" />
+                        </div>
+                        <h1 className="text-2xl font-bold font-Inter text-center">Failed to connect to <span className="lg:hidden">server</span> <code className="text-xl hidden lg:inline-block">{props.host}</code></h1>
+                        <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Reconnect</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push("/")}>Go home</button>
+                        </div>
+                    </>
+                )
+            }
+            {
+                status === "disconnected" && (
+                    <>
+                        <div className="flex items-center justify-center w-full">
+                            <IoLockClosed className="text-6xl" />
+                        </div>
+                        <h1 className="text-2xl font-bold font-Inter text-center">Disconnected from {displayName ? displayName : "server"}</h1>
+                        <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Reconnect</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push("/")}>Go home</button>
+                        </div>
+                    </>
+                )
+            }
+        </div>
+    );
+};
+
+export function getServerSideProps(context) {
+    if (context.query.host) return {
+        props: {
+            host: context.query?.host || null
+        }
+    };
+    else return {
+        redirect: {
+            destination: "/",
+            permanent: false
+        }
+    };
+};
