@@ -1,38 +1,17 @@
-<p align="center"><img src="https://i.imgur.com/P08L8HO.png"></p>
+# Setsuzoku <img width="64" align="right" alt="setsuzoku logo" src="https://github.com/hydrabank/setsuzoku/blob/master/renderer/public/images/infinity.png?raw=true">
 
-## Usage
+A simplistic SSH host manager for Windows. Built with Next.js, Electron, and powered by OpenSSH.
 
-### Create an App
+## Installation
+A pre-built installer and unpacked versions are available on the [releases page](https://github.com/hydrabank/setsuzoku/releases). **Windows versions are only available at this time**, however Linux and macOS support is planned in the future. If you'd like to help out, please feel free to open a PR!
 
-```
-# with npx
-$ npx create-nextron-app my-app --example with-javascript-tailwindcss
+## Development
+To run Setsuzoku in development mode, clone the repository and follow these steps:
 
-# with yarn
-$ yarn create nextron-app my-app --example with-javascript-tailwindcss
+1. Make sure that [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/) are installed.
+2. Install dependencies (`yarn install`)
+3. Run the development server (`yarn dev`)
+4. Wait for the Electron app to open and enjoy!
 
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-javascript-tailwindcss
-```
-
-### Install Dependencies
-
-```
-$ cd my-app
-
-# using yarn or npm
-$ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
-```
-
-### Use it
-
-```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
-
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
-```
+### Building Setsuzoku
+To build Setsuzoku's webapp, simply run `yarn build` and output will be placed in the `renderer/out` directory. `yarn dist` will build the webapp and package it using Electron Builder.

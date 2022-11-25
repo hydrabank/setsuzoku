@@ -10,4 +10,7 @@ module.exports = {
         // config.output.globalObject = 'this';
         return config;
     },
+    images: {
+        unoptimized: true
+    }
 };
