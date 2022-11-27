@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -29,13 +30,14 @@ const handleSubmit = (e) => {
             if (event.source === window && event.data?.type === "create" && event.data?.payload?.host === data.host) {
                 if (event.data?.payload?.success === false) alert(`Failed to add server: ${event.data?.payload?.error || "Unknown error"}`);
                 
-                else window.location.href = "index";
+                else window.location.href = `${window?.setsuzoku?.rootPath}/index.html`;
             }
         };
     })()
 };
 
 function Home() {
+    const router = useRouter();
     const [authMethod, setAuthMethod] = React.useState("agent");
     return (
         <React.Fragment>
@@ -43,9 +45,11 @@ function Home() {
                 <title>Add a server - Setsuzoku</title>
             </Head>
             <div className="flex flex-col text-right items-center md:items-end space-y-6">
-                <Link href="index" className="text-4xl">
+                <button onClick={(() => {
+                    router.push(`${window?.setsuzoku?.rootPath}/index.html`);
+                })} className="text-4xl">
                     <CgHomeAlt />
-                </Link>
+                </button>
                 <h1 className="text-4xl font-bold font-Inter md:text-right text-center">Add a server</h1>
                 <form className="flex flex-col space-y-4 w-full" onSubmit={handleSubmit}>
                     <input id="displayName" type="text" placeholder="Name" className="w-full pl-0 pr-2 py-4 bg-transparent border-b-[1px] focus:border-b-[2px] text-white text-base text-right focus:outline-none" required />

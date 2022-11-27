@@ -1,7 +1,14 @@
 const { ipcRenderer, contextBridge } = require('electron');
+const { format } = require('url');
+const { join } = require('path');
 
 const windowLoaded = new Promise(resolve => {
     window.onload = resolve
+});
+
+const windowBaseURL = new Promise(async resolve => {
+    await windowLoaded;
+    resolve(window.location.href);
 });
 
 contextBridge.exposeInMainWorld('electron', {
@@ -66,7 +73,12 @@ contextBridge.exposeInMainWorld("setsuzoku", {
     },
     debug: {
         openAppData: () => ipcRenderer.send("debug", { type: "openAppData" })
-    }
+    },
+    rootPath: process.env.SETSUZOKU_DEV === "true" ? "http://localhost:8000" : format({
+        pathname: join(__dirname, '../renderer/out'),
+        protocol: 'file:',
+        slashes: true,
+    })
 });
 
 ipcRenderer.on("listing", async (event, data) => {

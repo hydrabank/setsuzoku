@@ -15,6 +15,11 @@ const db = new JSONdb(join(app.getPath('userData'), 'db.json'));
 
 // Prepare the renderer once the app is ready
 app.on('ready', async () => {
+    if (isDev) {
+        process.env.SETSUZOKU_DEV = true;
+    } else {
+        process.env.SETSUZOKU_DEV = false;
+    };
     await db.set("servers", []);
     await db.delete("servers");
     await prepareNext('./renderer');
@@ -27,6 +32,7 @@ app.on('ready', async () => {
         webPreferences: {
             nodeIntegration: false,
             preload: join(__dirname, 'preload.js'),
+            sandbox: false
         },
     });
 
