@@ -29,7 +29,7 @@ const handleSubmit = (e) => {
             if (event.source === window && event.data?.type === "create" && event.data?.payload?.host === data.host) {
                 if (event.data?.payload?.success === false) alert(`Failed to add server: ${event.data?.payload?.error || "Unknown error"}`);
                 
-                else window.location.href = "/";
+                else window.location.href = "index";
             }
         };
     })()
@@ -43,7 +43,7 @@ function Home() {
                 <title>Add a server - Setsuzoku</title>
             </Head>
             <div className="flex flex-col text-right items-center md:items-end space-y-6">
-                <Link href="/" className="text-4xl">
+                <Link href="index" className="text-4xl">
                     <CgHomeAlt />
                 </Link>
                 <h1 className="text-4xl font-bold font-Inter md:text-right text-center">Add a server</h1>
