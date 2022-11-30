@@ -33,7 +33,7 @@ export default function Connected(props) {
                         </div>
                         <h1 className="text-2xl font-bold font-Inter text-center">Connecting to server..</h1>
                         <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(window?.setsuzoku?.rootPath + "/index.html")}>Go home</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => window?.setsuzoku?.router.push("/")}>Go home</button>
                         </div>
                     </>
                 )
@@ -44,10 +44,10 @@ export default function Connected(props) {
                         <div className="flex items-center justify-center">
                             <IoCheckmark className="text-6xl" />
                         </div>
-                        <h1 className="text-2xl font-bold font-Inter text-center">Connected to {displayName ? displayName : "server"}</h1>
+                        <h1 className="text-2xl font-bold font-Inter text-center"><b className="bg-clip-text text-transparent text-gradient-brand">Connected</b> to {displayName ? displayName : "server"}</h1>
                         <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Duplicate session</button>
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(window?.setsuzoku?.rootPath + "/index.html")}>Go home</button>
+                            <button className="hidden bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(`/connect/${router?.query?.host}`, {  }).then(() => router.reload())}>Duplicate session</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => window?.setsuzoku?.router.push("/")}>Go home</button>
                         </div>
                     </>
                 )
@@ -58,10 +58,10 @@ export default function Connected(props) {
                         <div className="flex items-center justify-center w-full">
                             <IoSad className="text-6xl" />
                         </div>
-                        <h1 className="text-2xl font-bold font-Inter text-center">Failed to connect to <span className="lg:hidden">server</span> <code className="text-xl hidden lg:inline-block">{router?.query?.host}</code></h1>
+                        <h1 className="text-2xl font-bold font-Inter text-center"><b className="bg-clip-text text-transparent text-gradient-lust">Failed to connect</b> to <span className="lg:hidden">server</span> <code className="text-xl hidden lg:inline-block">{router?.query?.host}</code></h1>
                         <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Reconnect</button>
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(window?.setsuzoku?.rootPath + "/index.html")}>Go home</button>
+                            <button className="hidden bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(`/connect/${router?.query?.host}`).then(() => router.reload())}>Reconnect</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => window?.setsuzoku?.router.push("/")}>Go home</button>
                         </div>
                     </>
                 )
@@ -72,10 +72,10 @@ export default function Connected(props) {
                         <div className="flex items-center justify-center w-full">
                             <IoLockClosed className="text-6xl" />
                         </div>
-                        <h1 className="text-2xl font-bold font-Inter text-center">Disconnected from {displayName ? displayName : "server"}</h1>
+                        <h1 className="text-2xl font-bold font-Inter text-center"><b className="bg-clip-text text-transparent text-gradient-lust">Disconnected</b> from {displayName ? displayName : "server"}</h1>
                         <div className="flex flex-row items-center justify-evenly w-full gap-x-4">
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.reload()}>Reconnect</button>
-                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(window?.setsuzoku?.rootPath + "/index.html")}>Go home</button>
+                            <button className="hidden bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => router.push(`/connect/${router?.query?.host}`).then(() => router.reload())}>Reconnect</button>
+                            <button className="bg-gray-50 text-black rounded-2xl px-6 py-2 font-bold font-Inter text-lg" onClick={() => window?.setsuzoku?.router.push("/")}>Go home</button>
                         </div>
                     </>
                 )

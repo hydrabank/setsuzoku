@@ -1,14 +1,28 @@
+import { useContext } from 'react';
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { IoClose } from "react-icons/io5";
+import { PagewideContext } from '/components/Contexts/PagewideContext';
+
 export default function ServerListing(props) {
-    const router = useRouter();
+    const { context, setContext } = useContext(PagewideContext);
 
     const removeItem = async () => {
-        const dialog = confirm("Are you sure you want to remove this server from your list?");
-        if (dialog === true) {
+        setContext({
+            ...context,
+            dialog: {
+                open: true,
+                type: "confirmDeletion",
+                props: {
+                    id: props.host,
+                    name: props.displayName
+                }
+            }
+        })
+        console.log(context)
+        if (context === true) {
             await window.setsuzoku.listing.remove(props.host);
-            router.reload();
+            window?.setsuzoku?.router.push("/");
         };
     };
 

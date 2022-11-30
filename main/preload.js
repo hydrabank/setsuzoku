@@ -74,6 +74,27 @@ contextBridge.exposeInMainWorld("setsuzoku", {
     debug: {
         openAppData: () => ipcRenderer.send("debug", { type: "openAppData" })
     },
+    router: {
+        push: async (url) => {
+            if (url.startsWith("file://")) {
+                throw new Error("Path must be relative");
+            };
+
+            if (url === "/") {
+                url = "/index.html";
+            }
+
+            ipcRenderer.send("router", { type: "push", path: url });
+
+            return new Promise(resolve => {
+                ipcRenderer.once("router", (event, message) => {
+                    if (message.type === "push") {
+                        resolve(message?.payload);
+                    };
+                });
+            });
+        }
+    },
     rootPath: process.env.SETSUZOKU_DEV === "true" ? "http://localhost:8000" : format({
         pathname: join(__dirname, '../renderer/out'),
         protocol: 'file:',
@@ -82,6 +103,11 @@ contextBridge.exposeInMainWorld("setsuzoku", {
 });
 
 ipcRenderer.on("listing", async (event, data) => {
+    await windowLoaded;
+    window.postMessage(data, "*");
+});
+
+ipcRenderer.on("router", async (event, data) => {
     await windowLoaded;
     window.postMessage(data, "*");
 });

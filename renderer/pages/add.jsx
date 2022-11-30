@@ -30,7 +30,7 @@ const handleSubmit = (e) => {
             if (event.source === window && event.data?.type === "create" && event.data?.payload?.host === data.host) {
                 if (event.data?.payload?.success === false) alert(`Failed to add server: ${event.data?.payload?.error || "Unknown error"}`);
                 
-                else window.location.href = `${window?.setsuzoku?.rootPath}/index.html`;
+                else window.setsuzoku?.router?.push("/");
             }
         };
     })()
@@ -46,11 +46,11 @@ function Home() {
             </Head>
             <div className="flex flex-col text-right items-center md:items-end space-y-6">
                 <button onClick={(() => {
-                    router.push(`${window?.setsuzoku?.rootPath}/index.html`);
+                    window.setsuzoku?.router?.push("/index.html");
                 })} className="text-4xl">
                     <CgHomeAlt />
                 </button>
-                <h1 className="text-4xl font-bold font-Inter md:text-right text-center">Add a server</h1>
+                <h1 className="text-4xl font-bold font-Inter md:text-right text-center bg-clip-text text-transparent text-gradient-brand">Add a server</h1>
                 <form className="flex flex-col space-y-4 w-full" onSubmit={handleSubmit}>
                     <input id="displayName" type="text" placeholder="Name" className="w-full pl-0 pr-2 py-4 bg-transparent border-b-[1px] focus:border-b-[2px] text-white text-base text-right focus:outline-none" required />
                     <input id="host" type="text" placeholder="Host" className="w-full pl-0 pr-2 px-8 py-4 bg-transparent border-b-[1px] focus:border-b-[2px] text-white text-base text-right focus:outline-none" required />

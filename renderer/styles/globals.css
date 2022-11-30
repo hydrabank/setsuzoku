@@ -14,6 +14,12 @@
   .btn-blue {
     @apply text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-500;
   }
+  .text-gradient-brand {
+    @apply bg-gradient-to-r from-indigo-200 via-red-200 to-yellow-100;
+  }
+  .text-gradient-lust {
+    @apply bg-gradient-to-r from-rose-700 to-pink-600;
+  }
 }
 
 

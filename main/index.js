@@ -3,13 +3,15 @@ const { join } = require('path');
 const { format } = require('url');
 
 // Packages
-const { BrowserWindow, app, ipcMain } = require('electron');
+const { BrowserWindow, app, ipcMain, globalShortcut } = require('electron');
 const JSONdb = require('simple-json-db');
 
 const isDev = require('electron-is-dev');
 const prepareNext = require('electron-next');
 const shelljs = require('shelljs');
 const { readFileSync } = require('fs');
+
+let mainWindow = null;
 
 const db = new JSONdb(join(app.getPath('userData'), 'db.json'));
 
@@ -24,7 +26,7 @@ app.on('ready', async () => {
     await db.delete("servers");
     await prepareNext('./renderer');
 
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 900,
         height: 600,
         minWidth: 900,
@@ -47,18 +49,81 @@ app.on('ready', async () => {
     mainWindow.loadURL(url)
 });
 
+app.on('browser-window-focus', function () {
+    const url = isDev
+    ? 'http://localhost:8000'
+    : format({
+        pathname: join(__dirname, '../renderer/out/index.html'),
+        protocol: 'file:',
+        slashes: true,
+    });
+
+    globalShortcut.register("CommandOrControl+R", () => {
+        if (mainWindow) {
+            mainWindow?.loadURL(url);
+        }
+    });
+    globalShortcut.register("F5", () => {
+        if (mainWindow) {
+            mainWindow?.loadURL(url);
+        }
+    });
+});
+
 // Quit the app once all windows are closed
 app.on('window-all-closed', app.quit);
 
 // listen the channel `message` and resend the received message to the renderer process
 ipcMain.on('message', (event, message) => {
-    console.log(message)
     event.sender.send('message', message)
 });
 
 ipcMain.on("debug", (event, data) => {
     if (data.type === "openAppData") {
         require("electron").shell.openPath(app.getPath("userData"));
+    };
+});
+
+ipcMain.on("router", (event, data) => {
+    const url = isDev
+    ? 'http://localhost:8000'
+    : format({
+        pathname: join(__dirname, '../renderer/out/'),
+        protocol: 'file:',
+        slashes: true,
+    });
+
+    if (mainWindow === null) {
+        return event.sender.send("router", {
+            type: "router",
+            payload: {
+                success: false,
+                error: "Main window is nil, not initialized"
+            }
+        });
+    };
+
+    if (data.type === "push") {
+        // Reject if path not relative
+        if (data.path.startsWith("file://")) {
+            return event.sender.send("router", {
+                type: "push",
+                payload: {
+                    success: false,
+                    error: "Path must be relative"
+                }
+            });
+        };
+
+        if (mainWindow) {
+            mainWindow?.loadURL(url + data.path);
+            return event.sender.send("router", {
+                type: "push",
+                payload: {
+                    success: true
+                }
+            });
+        }
     };
 });
 
